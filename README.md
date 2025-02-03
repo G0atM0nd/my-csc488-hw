@@ -1,1 +1,1 @@
-# my-csc488-hw
+This repositry contains work from csc488.
