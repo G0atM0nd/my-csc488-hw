@@ -1,13 +1,1 @@
-# Create a list of 10 different integers
-numbers = [3, 7, 12, 45, 28, 9, 16, 23, 50, 31]
 
-# Function to determine if numbers are even or odd
-def check_even_odd(num_list):
-    for num in num_list:
-        if num % 2 == 0:
-            print(f"{num} is even")
-        else:
-            print(f"{num} is odd")
-
-# Call the function
-check_even_odd(numbers)
