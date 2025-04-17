@@ -1,1 +1,129 @@
+ISS Tracking API
 
+A containerized Flask web API for querying International Space Station (ISS) positional and sighting data. 
+The project integrates XML datasets, provides RESTful endpoints, and uses Docker, Pytest, and a Makefile for development and deployment.
+
+---
+
+## Project Description
+
+This Flask API ingests two XML datasets:
+
+- **ISS Positional Data**: Timestamped records of ISS latitude, longitude, and altitude.
+- **ISS Sighting Data**: Visibility passes over cities worldwide, grouped by country and region.
+
+It exposes RESTful endpoints to:
+
+- List all epoch timestamps.
+- Retrieve position details for a specific epoch.
+- List available countries, regions, and cities with sighting records.
+- Fetch live data from NASA’s API as an additional endpoint.
+
+The application is containerized with Docker for portability, uses a Makefile for streamlined commands, and Pytest for automated unit testing.
+
+## Prerequisites
+
+- **Python** 3.9 or higher
+- **Docker** (for containerized deployment)
+- **Make** (optional, for using the Makefile)
+
+## Installation & Setup
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/iss-tracking-api.git
+   cd iss-tracking-api
+   ```
+
+2. **Create and activate a virtual environment**
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate
+   ```
+
+3. **Install dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+## Running the Application
+
+1. **Load data into memory**
+   ```bash
+   curl -X POST http://127.0.0.1:5000/load-data
+   ```
+
+2. **List all epochs**
+   ```bash
+   curl http://127.0.0.1:5000/epochs
+   ```
+
+3. **Retrieve position details**
+   ```bash
+   curl http://127.0.0.1:5000/epochs/<epoch_timestamp>
+   ```
+
+Replace `<epoch_timestamp>` with a value returned from the `/epochs` endpoint.
+
+## Usage Examples
+
+- **List countries with sightings**
+  ```bash
+  curl http://127.0.0.1:5000/countries
+  ```
+
+- **Sighting data for Olathe, Kansas**
+  ```bash
+  curl http://127.0.0.1:5000/countries/United_States/regions/Kansas/cities/Olathe
+  ```
+
+- **Fetch live NASA data**
+  ```bash
+  curl http://127.0.0.1:5000/fetch-nasa-data
+  ```
+
+## Docker & Containerized Deployment
+
+1. **Build the Docker image**
+   ```bash
+   docker build -t iss-api .
+   ```
+
+2. **Run the container**
+   ```bash
+   docker run -d -p 5001:5000 --name iss-api iss-api
+   ```
+
+3. **Access the API** on `http://localhost:5000`.
+
+
+## Makefile
+
+The `Makefile` simplifies common tasks:
+
+| Target    | Description                         |
+|-----------|-------------------------------------|
+| `make build` | Build the Docker image             |
+| `make run`   | Run the container on port 5001     |
+| `make test`  | Execute Pytest suite               |
+
+Customize port or image name by editing variables at the top of the Makefile.
+
+## API Endpoints
+
+| Method | Route                                                 | Description                                        |
+|--------|-------------------------------------------------------|----------------------------------------------------|
+| GET    | `/`                                                   | API overview and instructions                      |
+| POST   | `/load-data`                                          | Load XML datasets into memory                      |
+| GET    | `/epochs`                                             | List all positional data epoch timestamps          |
+| GET    | `/epochs/<epoch>`                                     | Details for a specified epoch (lat, lon, alt)      |
+| GET    | `/countries`                                          | List all countries in sighting dataset             |
+| GET    | `/countries/<country>`                                | All sighting records for a country                 |
+| GET    | `/countries/<country>/regions`                        | List regions within a country                      |
+| GET    | `/countries/<country>/regions/<region>`               | Sighting data for a specific region                |
+| GET    | `/countries/<country>/regions/<region>/cities`        | List cities in a region                            |
+| GET    | `/countries/<country>/regions/<region>/cities/<city>` | Detailed sighting records for a city               |
+## Data & Acknowledgments
+
+- Positional data courtesy of NASA’s [ISS_COORDS_2022-02-13](https://data.nasa.gov/Space-Science/ISS_COORDS_2022-02-13/r6u8-bhhq) dataset.
+- Sighting data provided by the ISS tracker service.
