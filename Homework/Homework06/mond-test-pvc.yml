@@ -1,0 +1,15 @@
+# File: mond-test-pvc.yml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mond-test-pvc
+  labels:
+    app: mond
+    env: test
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: nfs
+  resources:
+    requests:
+      storage: 1Gi
