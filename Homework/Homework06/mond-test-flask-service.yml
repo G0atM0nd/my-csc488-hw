@@ -1,0 +1,19 @@
+# File: mond-test-flask-service.yml
+apiVersion: v1
+kind: Service
+metadata:
+  name: mond-test-flask-svc
+  labels:
+    app: mond
+    tier: flask
+    env: test
+spec:
+  type: ClusterIP
+  selector:
+    app: mond
+    tier: flask
+    env: test
+  ports:
+    - port: 5000
+      targetPort: 5000
+      name: http
