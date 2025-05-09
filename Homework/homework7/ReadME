@@ -1,43 +1,49 @@
-Architecture Diagram
+# ISS Tracking API Midterm Project
 
+This repository contains the ISS (International Space Station) Tracking API developed in Flask for the CSC 488 midterm project. It provides RESTful endpoints to load, query, and fetch both historical positional data (epochs) and sighting reports (countries, regions, cities) parsed from XML files.
 
+**Link to Midterm Project Repository:** [https://github.com/yourusername/CSC488-midterm](https://github.com/yourusername/CSC488-midterm)
 
-The diagram above highlights the core components and data flow within the ISS Tracking API.
+---
 
-Components and Data Flow
+## Architecture Diagram
 
-Flask Application (app.py)
+![System Architecture](image.png)
 
-Serves as the entry point and defines all API routes.
+> The diagram above highlights the core components and data flow within the ISS Tracking API.
 
-Handles HTTP methods (GET, POST) and maps them to controller functions.
+---
 
-Data Loader Module (data_loader.py)
+## Components and Data Flow
 
-Contains the load_data function to parse positional and sighting XML files.
+1. **Flask Application (`app.py`)**
+   - Serves as the entry point and defines all API routes.
+   - Handles HTTP methods (GET, POST) and maps them to controller functions.
 
-Returns two dictionaries: positional_data and sighting_data for in-memory storage.
+2. **Data Loader Module (`data_loader.py`)**
+   - Contains the `load_data` function to parse positional and sighting XML files.
+   - Returns two dictionaries: `positional_data` and `sighting_data` for in-memory storage.
 
-Endpoints
+3. **Endpoints**
+   - **POST `/load-data`**: Uploads or defaults to local XML files and populates the in-memory data structures.
+   - **GET `/epochs`** & **GET `/epochs/<epoch>`**: List all epochs or fetch details for a specific timestamp.
+   - **GET `/countries`**, **GET `/countries/<country>`**, **GET `/countries/<country>/regions`**, **GET `/countries/<country>/regions/<region>`**, **GET `/countries/<country>/regions/<region>/cities`**, **GET `/countries/<country>/regions/<region>/cities/<city>`**: Traverse the hierarchy of sighting data.
+   - **GET `/fetch-nasa-data`**: Calls an external NASA XML API, saves the response locally, and provides feedback.
 
-POST /load-data: Uploads or defaults to local XML files and populates the in-memory data structures.
+4. **In-Memory Storage**
+   - Two Python dictionaries (`positional_data` and `sighting_data`) hold parsed XML content for fast lookups.
+   - Data is only persistent for the lifetime of the Flask process; it resets on restart.
 
-GET /epochs & GET /epochs/<epoch>: List all epochs or fetch details for a specific timestamp.
+5. **Local Data Directory (`/data`)**
+   - Stores default XML files (e.g., `XMLsightingData_citiesUSA05.xml`) and any uploaded or fetched XML.
 
-GET /countries, GET /countries/<country>, GET /countries/<country>/regions, GET /countries/<country>/regions/<region>, GET /countries/<country>/regions/<region>/cities, GET /countries/<country>/regions/<region>/cities/<city>: Traverse the hierarchy of sighting data.
+6. **External Integration**
+   - Utilizes the `requests` library to fetch live XML data from a NASA endpoint.
 
-GET /fetch-nasa-data: Calls an external NASA XML API, saves the response locally, and provides feedback.
+---
 
-In-Memory Storage
+## Setup and Usage
 
-Two Python dictionaries (positional_data and sighting_data) hold parsed XML content for fast lookups.
-
-Data is only persistent for the lifetime of the Flask process; it resets on restart.
-
-Local Data Directory (/data)
-
-Stores default XML files (e.g., XMLsightingData_citiesUSA05.xml) and any uploaded or fetched XML.
-
-External Integration
-
-Utilizes the requests library to fetch live XML data from a NASA endpoint.
+1. **Install Dependencies**
+   ```bash
+   pip install -r requirements.txt
