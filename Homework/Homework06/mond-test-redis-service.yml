@@ -1,0 +1,19 @@
+# File: mond-test-redis-service.yml
+apiVersion: v1
+kind: Service
+metadata:
+  name: mond-test-redis-svc
+  labels:
+    app: mond
+    tier: redis
+    env: test
+spec:
+  type: ClusterIP
+  selector:
+    app: mond
+    tier: redis
+    env: test
+  ports:
+    - port: 6379
+      targetPort: 6379
+      name: redis
