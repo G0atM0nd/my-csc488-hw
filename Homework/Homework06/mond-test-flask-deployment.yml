@@ -1,0 +1,32 @@
+# File: mond-test-flask-deployment.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mond-test-flask
+  labels:
+    app: mond
+    env: test
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: mond
+      tier: flask
+      env: test
+  template:
+    metadata:
+      labels:
+        app: mond
+        tier: flask
+        env: test
+    spec:
+      containers:
+        - name: flask-api
+          image: <your-dockerhub-username>/flask-api:latest
+          ports:
+            - containerPort: 5000
+          env:
+            - name: REDIS_HOST
+              value: mond-test-redis-svc
+            - name: REDIS_PORT
+              value: "6379"
